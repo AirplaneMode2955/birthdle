@@ -79,23 +79,22 @@
   @keyframes goldSweep { 0% { background-position: 0% center; } 50% { background-position: 100% center; } 100% { background-position: 0% center; } }
   .title-block .pnum { font-size: 10px; color: var(--gold-dim); margin-top: 6px; letter-spacing: 0.5px; }
 
-  .mode-bar {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    margin: 0 0 14px; font-size: 11px; color: var(--text-dim);
-    text-transform: uppercase; letter-spacing: 0.5px;
+  #gameCard.pending { visibility: hidden; }
+
+  .mode-select { margin-top: 4px; padding-top: 14px; border-top: 1px solid var(--border-soft); }
+  .mode-select-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px;
+    color: var(--text-faint); text-align: center; margin-bottom: 8px;
   }
-  .switch { position: relative; display: inline-block; width: 34px; height: 20px; flex-shrink: 0; }
-  .switch input { opacity: 0; width: 0; height: 0; }
-  .switch .slider {
-    position: absolute; inset: 0; cursor: pointer;
-    background: var(--border); border-radius: 999px; transition: background 0.2s;
+  .mode-btn-row { display: flex; gap: 8px; }
+  .mode-choice-btn {
+    flex: 1; padding: 12px; border-radius: var(--radius); border: 1px solid var(--border);
+    background: var(--card-2); color: var(--text); font-weight: 700; font-size: 13px;
+    text-transform: uppercase; letter-spacing: 0.4px; cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
   }
-  .switch .slider::before {
-    content: ""; position: absolute; height: 14px; width: 14px; left: 3px; bottom: 3px;
-    background: var(--text); border-radius: 50%; transition: transform 0.2s;
-  }
-  .switch input:checked + .slider { background: var(--gold); }
-  .switch input:checked + .slider::before { transform: translateX(14px); background: var(--on-gold); }
+  .mode-choice-btn.active { background: var(--gold); border-color: var(--gold); color: var(--on-gold); }
+  .mode-select-desc { font-size: 12px; color: var(--text-dim); text-align: center; margin: 10px 0 0; }
 
   .card {
     background: var(--card);
@@ -305,15 +304,7 @@
     <button class="icon-btn" id="statsBtn" aria-label="Stats">📊</button>
   </header>
 
-  <div class="mode-bar">
-    <span>Hard Mode</span>
-    <label class="switch">
-      <input type="checkbox" id="hardModeToggle">
-      <span class="slider"></span>
-    </label>
-  </div>
-
-  <div class="card">
+  <div class="card" id="gameCard">
     <div class="photo-frame" id="photoFrame">
       <div class="photo-skel" id="photoSkel"></div>
       <div class="photo-fallback" id="photoFallback" style="display:none;">
@@ -376,7 +367,15 @@
       <p style="margin:0;">4th tile is <strong style="color:var(--text);">birth country</strong>. Green = exact country, amber = right continent, gray = wrong continent.</p>
     </div>
     <p>Miss twice and their category unlocks. Miss four times and you'll get a fun fact.</p>
-    <p>Flip on <strong style="color:var(--text);">Hard Mode</strong> up top to blur the photo — it sharpens with every guess.</p>
+
+    <div class="mode-select">
+      <div class="mode-select-label">Choose your mode</div>
+      <div class="mode-btn-row">
+        <button class="mode-choice-btn" id="modeNormalBtn" type="button">Normal</button>
+        <button class="mode-choice-btn" id="modeHardBtn" type="button">Hard Mode</button>
+      </div>
+      <p class="mode-select-desc">Hard Mode blurs the photo until you guess — it sharpens with every try.</p>
+    </div>
   </div>
 </div>
 
@@ -600,15 +599,37 @@ const statsResultSection = document.getElementById('statsResultSection');
 const guessBtn = document.getElementById('guessBtn');
 const ySel = document.getElementById('ySel');
 const cSel = document.getElementById('cSel');
-const hardModeToggle = document.getElementById('hardModeToggle');
+const gameCard = document.getElementById('gameCard');
+const modeNormalBtn = document.getElementById('modeNormalBtn');
+const modeHardBtn = document.getElementById('modeHardBtn');
 
 let hardMode = localStorage.getItem('birthdle_hardmode') === '1';
-hardModeToggle.checked = hardMode;
-hardModeToggle.addEventListener('change', () => {
-  hardMode = hardModeToggle.checked;
+
+function updateModeButtons(){
+  modeNormalBtn.classList.toggle('active', !hardMode);
+  modeHardBtn.classList.toggle('active', hardMode);
+}
+updateModeButtons();
+
+function setHardMode(val){
+  hardMode = val;
   localStorage.setItem('birthdle_hardmode', hardMode ? '1' : '0');
+  updateModeButtons();
   updatePhotoBlur();
-});
+}
+
+function revealGame(){
+  gameCard.classList.remove('pending');
+  updatePhotoBlur();
+}
+
+modeNormalBtn.addEventListener('click', () => { setHardMode(false); closeModal('helpOverlay'); revealGame(); });
+modeHardBtn.addEventListener('click', () => { setHardMode(true); closeModal('helpOverlay'); revealGame(); });
+
+if (state.guesses.length === 0 && !state.finished){
+  gameCard.classList.add('pending');
+}
+
 function updatePhotoBlur(){
   const img = photoFrame.querySelector('img');
   if (!img) return;
@@ -822,8 +843,8 @@ function openModal(id){ document.getElementById(id).classList.add('open'); }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
 
 document.getElementById('helpBtn').addEventListener('click', () => openModal('helpOverlay'));
-document.getElementById('helpClose').addEventListener('click', () => closeModal('helpOverlay'));
-document.getElementById('helpOverlay').addEventListener('click', (e) => { if (e.target.id === 'helpOverlay') closeModal('helpOverlay'); });
+document.getElementById('helpClose').addEventListener('click', () => { closeModal('helpOverlay'); revealGame(); });
+document.getElementById('helpOverlay').addEventListener('click', (e) => { if (e.target.id === 'helpOverlay') { closeModal('helpOverlay'); revealGame(); } });
 
 document.getElementById('statsBtn').addEventListener('click', () => { renderStats(false); openModal('statsOverlay'); });
 document.getElementById('statsClose').addEventListener('click', () => closeModal('statsOverlay'));
