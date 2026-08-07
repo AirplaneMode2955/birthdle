@@ -386,7 +386,7 @@
     <div id="statsResultSection" style="display:none;">
       <div class="result-headline" id="resultHeadline"></div>
       <div class="result-answer" id="resultAnswer"></div>
-      <button class="share-btn" id="shareBtn">Share result</button>
+      <button class="share-btn" id="shareBtn">Copy result</button>
       <div class="copied-msg" id="copiedMsg"></div>
     </div>
     <div class="stats-grid">
@@ -825,17 +825,27 @@ document.getElementById('shareBtn').addEventListener('click', () => {
     const emoji = f => f.cls === 'exact' ? '🟩' : f.cls === 'close' ? '🟨' : '⬜';
     return emoji(mF) + emoji(dF) + emoji(yF) + emoji(cF);
   }).join('\n');
-  const text = 'Birthdle #' + puzzleNumber() + ' ' + (state.won ? state.guesses.length + '/6' : 'X/6') + '\n' + rows;
+  const text = 'Birthdle #' + puzzleNumber() + ' ' + (state.won ? state.guesses.length + '/6' : 'X/6') + '\n' + rows + '\n\nThink you can beat my score? https://birthdle-nine.vercel.app';
   const copiedMsg = document.getElementById('copiedMsg');
-  if (navigator.share){
-    navigator.share({ text: text }).catch(()=>{});
-  } else if (navigator.clipboard){
-    navigator.clipboard.writeText(text).then(() => {
-      copiedMsg.textContent = 'Copied to clipboard!';
-      setTimeout(() => copiedMsg.textContent = '', 2000);
-    });
+  function fallbackCopy(str){
+    const ta = document.createElement('textarea');
+    ta.value = str;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(ta);
+  }
+  function showCopied(){
+    copiedMsg.textContent = 'Copied to clipboard!';
+    setTimeout(() => copiedMsg.textContent = '', 2000);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(showCopied).catch(() => { fallbackCopy(text); showCopied(); });
   } else {
-    copiedMsg.textContent = text;
+    fallbackCopy(text);
+    showCopied();
   }
 });
 
