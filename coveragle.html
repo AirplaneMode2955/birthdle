@@ -253,6 +253,13 @@
   .stats-grid .stat .n { font-size: 22px; font-weight: 800; color: var(--primary-dark); }
   .stats-grid .stat .l { font-size: 9px; color: var(--text-faint); text-transform: uppercase; margin-top: 3px; letter-spacing: 0.3px; }
 
+  .share-card { text-align: center; border-color: var(--secondary); }
+  .share-card-title { font-family: var(--font-head); font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 6px; }
+  .share-card-sub { font-size: 12px; color: var(--text-dim); line-height: 1.5; margin: 0 0 14px; }
+  .share-card-sub a { color: var(--secondary); font-weight: 700; text-decoration: none; }
+
+  .other-game-link { display: block; text-align: center; font-size: 12px; color: var(--secondary); font-weight: 700; text-decoration: none; margin-bottom: 14px; }
+
   .cta-card {
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: #fff; text-align: center; padding: 18px 16px;
@@ -314,6 +321,15 @@
     <div class="lives" id="livesRow"></div>
     <div class="guess-history" id="guessHistory"></div>
   </div>
+
+  <div class="card share-card" id="shareCard" style="display:none;">
+    <div class="share-card-title" id="shareCardHeadline">Nice work!</div>
+    <p class="share-card-sub">A daily puzzle from <strong>The Insurance Center</strong> — real coverage, real Utah agents, since 1995. <a href="https://theinsurancecenter.com" target="_blank" rel="noopener">Get a free quote →</a></p>
+    <button class="share-btn" id="shareBtnMain">Copy Result</button>
+    <div class="copied-msg" id="copiedMsgMain"></div>
+  </div>
+
+  <a class="other-game-link" href="connections.html">Prefer sorting puzzles? Try Coverage Connections →</a>
 
   <div class="cta-card">
     <h3>Actually need coverage?</h3>
@@ -773,10 +789,13 @@ function finishGame(){
   categoryBadge.textContent = answer.fam; categoryBadge.classList.add('show');
   hintBox.textContent = answer.f;
   renderScenario();
-  resultHeadline.textContent = state.won ? 'Nailed it!' : "So close — try again tomorrow";
+  const headline = state.won ? 'Nailed it!' : "So close — try again tomorrow";
+  resultHeadline.textContent = headline;
   resultAnswer.textContent = "Today's coverage was " + answer.n + '.';
   resultFunfact.textContent = answer.f;
   statsResultSection.style.display = 'block';
+  document.getElementById('shareCardHeadline').textContent = headline;
+  document.getElementById('shareCard').style.display = 'block';
 
   const stats = loadStats();
   const pNum = puzzleNumber();
@@ -844,15 +863,18 @@ guessBtn.addEventListener('click', () => {
 });
 guessInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') guessBtn.click(); });
 
-document.getElementById('shareBtn').addEventListener('click', () => {
+function buildShareText(){
   const rows = state.guesses.map(g => {
     const emoji = f => f.cls === 'exact' ? '🟩' : f.cls === 'close' ? '🟨' : '⬜';
     return emoji(lineTile(g)) + emoji(famTile(g)) + emoji(protTile(g)) + emoji(reqTile(g));
   }).join('\n');
   const url = location.origin + location.pathname;
-  const text = 'Coveragle #' + puzzleNumber() + ' ' + (state.won ? state.guesses.length + '/6' : 'X/6') + '\n' + rows +
+  return 'Coveragle #' + puzzleNumber() + ' ' + (state.won ? state.guesses.length + '/6' : 'X/6') + '\n' + rows +
     '\n\nThink you know your coverage? Play at ' + url + '\nThe Insurance Center · (801) 622-2626 #TheInsuranceCenter';
-  const copiedMsg = document.getElementById('copiedMsg');
+}
+
+function copyShareText(msgEl){
+  const text = buildShareText();
   function fallbackCopy(str){
     const ta = document.createElement('textarea');
     ta.value = str;
@@ -864,8 +886,8 @@ document.getElementById('shareBtn').addEventListener('click', () => {
     document.body.removeChild(ta);
   }
   function showCopied(){
-    copiedMsg.textContent = 'Copied to clipboard!';
-    setTimeout(() => copiedMsg.textContent = '', 2000);
+    msgEl.textContent = 'Copied to clipboard!';
+    setTimeout(() => msgEl.textContent = '', 2000);
   }
   if (navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(showCopied).catch(() => { fallbackCopy(text); showCopied(); });
@@ -873,7 +895,10 @@ document.getElementById('shareBtn').addEventListener('click', () => {
     fallbackCopy(text);
     showCopied();
   }
-});
+}
+
+document.getElementById('shareBtn').addEventListener('click', () => copyShareText(document.getElementById('copiedMsg')));
+document.getElementById('shareBtnMain').addEventListener('click', () => copyShareText(document.getElementById('copiedMsgMain')));
 
 function openModal(id){ document.getElementById(id).classList.add('open'); }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }

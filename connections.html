@@ -189,6 +189,11 @@
   .stats-grid .stat .n { font-size: 22px; font-weight: 800; color: var(--primary-dark); }
   .stats-grid .stat .l { font-size: 9px; color: var(--text-faint); text-transform: uppercase; margin-top: 3px; letter-spacing: 0.3px; }
 
+  .share-card { text-align: center; border-color: var(--secondary); animation: barIn 0.4s ease both; }
+  .share-card-title { font-family: var(--font-head); font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 6px; }
+  .share-card-sub { font-size: 12px; color: var(--text-dim); line-height: 1.5; margin: 0 0 14px; }
+  .share-card-sub a { color: var(--secondary); font-weight: 700; text-decoration: none; }
+
   .cta-card {
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: #fff; text-align: center; padding: 18px 16px;
@@ -237,6 +242,13 @@
       <button class="action-btn" id="deselectBtn" type="button">Deselect</button>
       <button class="action-btn submit" id="submitBtn" type="button" disabled>Submit</button>
     </div>
+  </div>
+
+  <div class="card share-card" id="shareCard" style="display:none;">
+    <div class="share-card-title" id="shareCardHeadline">Nice work!</div>
+    <p class="share-card-sub">A daily puzzle from <strong>The Insurance Center</strong> — real coverage, real Utah agents, since 1995. <a href="https://theinsurancecenter.com" target="_blank" rel="noopener">Get a free quote →</a></p>
+    <button class="share-btn" id="shareBtnMain">Copy Result</button>
+    <div class="copied-msg" id="copiedMsgMain"></div>
   </div>
 
   <a class="other-game-link" href="coveragle.html">Prefer guessing games? Try Coveragle →</a>
@@ -340,6 +352,126 @@ const PUZZLES = [
     { color:'green', name:'Why You Might Need Farm & Ranch Insurance', items:['Livestock','Barn','Irrigation Equipment','Hired Hands'] },
     { color:'blue', name:'Reasons Utah Drivers File Auto Claims', items:['Deer Strike','Black Ice','Canyon Rockslide','Distracted Driving'] },
     { color:'purple', name:'Only True in Utah Insurance', items:['PIP Required','25/65/15 Minimums','Modified No-Fault','Big "I" Agency'] }
+  ]},
+  { title: "Gig Economy Driving", groups: [
+    { color:'yellow', name:'Popular Gig & Rideshare Apps', items:['Uber','Lyft','DoorDash','Instacart'] },
+    { color:'green', name:'Rideshare Insurance Coverage Periods', items:['App Off','Waiting for a Match','En Route to Pickup','Passenger Onboard'] },
+    { color:'blue', name:'Why a Standard Auto Policy Denies a Gig-Driving Claim', items:['Business Use Exclusion','Livery Exclusion','Undisclosed Ride-Hailing Use','Commercial Vehicle Classification'] },
+    { color:'purple', name:'Products Built to Plug the Gig Economy Gap', items:['Rideshare Endorsement','TNC Policy','Contingent Liability Coverage','Hybrid Coverage'] }
+  ]},
+  { title: "Contractors & Construction", groups: [
+    { color:'yellow', name:'Who Might Carry a Contractor’s Policy', items:['General Contractor','Subcontractor','Electrician','Roofer'] },
+    { color:'green', name:'What a Contractor Needs Besides General Liability', items:['Workers’ Comp','Commercial Auto','Tools & Equipment Coverage','Builders Risk'] },
+    { color:'blue', name:'Reasons to Ask for a Certificate of Insurance', items:['Uninsured Sub Injured','Neighbor’s Property Damaged','Code Violation Discovered','Contractor Vanishes Mid-Job'] },
+    { color:'purple', name:'Bond Types in Construction', items:['Bid Bond','Performance Bond','Payment Bond','Maintenance Bond'] }
+  ]},
+  { title: "Weddings & Events", groups: [
+    { color:'yellow', name:'Reasons You’d File a Wedding Insurance Claim', items:['Vendor No-Show','Venue Fire','Extreme Weather','Sudden Illness'] },
+    { color:'green', name:'Coverage Types Inside a Wedding Policy', items:['Liability Coverage','Liquor Liability','Cancellation Coverage','Postponement Coverage'] },
+    { color:'blue', name:'Who Might Require You to Carry Event Insurance', items:['The Venue','The Caterer','The City (Permit)','The Equipment Rental Company'] },
+    { color:'purple', name:'Real (and Real Weird) Wedding Policy Terms', items:['Rain Date Clause','Named Storm Deductible','Host Liquor Liability','Cold Feet Exclusion'] }
+  ]},
+  { title: "Short-Term Rentals", groups: [
+    { color:'yellow', name:'Why a Homeowners Policy May Deny an Airbnb Claim', items:['Business Use Exclusion','Frequent Rental Activity','Guest Injury Liability','Guest Theft of Belongings'] },
+    { color:'green', name:'What a Short-Term Rental Host Actually Needs', items:['STR Endorsement','Commercial Liability','Business Interruption','Loss of Rental Income'] },
+    { color:'blue', name:'Airbnb/VRBO Platform Terms — Not Insurance At All', items:['Host Guarantee','Superhost Status','Instant Book','Cleaning Fee'] },
+    { color:'purple', name:'Actual Insurance Terms That Sound Like Platform Perks', items:['Host Protection Insurance','AirCover for Hosts','Experience Coverage','Property Damage Protection'] }
+  ]},
+  { title: "Money & Numbers", groups: [
+    { color:'yellow', name:'Types of Deductibles', items:['Flat Deductible','Percentage Deductible','Disappearing Deductible','Aggregate Deductible'] },
+    { color:'green', name:'Factors That Affect Your Premium', items:['Credit-Based Insurance Score','Driving Record','Home’s Age','Claims History'] },
+    { color:'blue', name:'Insurance Math Terms', items:['Loss Ratio','Combined Ratio','Earned Premium','Incurred Losses'] },
+    { color:'purple', name:'Ways an Insurer Might Value a Total Loss', items:['Actual Cash Value','Replacement Cost','Agreed Value','Stated Value'] }
+  ]},
+  { title: "Acronym Soup", groups: [
+    { color:'yellow', name:'Personal Lines Acronyms', items:['PIP','UM','UIM','HO-3'] },
+    { color:'green', name:'Commercial Lines Acronyms', items:['GL','WC','E&O','D&O'] },
+    { color:'blue', name:'Acronyms You’ll See on Official Paperwork', items:['BOP','COI','NAIC','DOI'] },
+    { color:'purple', name:'Acronyms Agents Use That Aren’t Coverage Types', items:['FICO','VIN','LLC','IRS'] }
+  ]},
+  { title: "Weather & Disaster", groups: [
+    { color:'yellow', name:'Weather Perils Covered by Standard Homeowners', items:['Wind','Hail','Lightning','Fire'] },
+    { color:'green', name:'Perils That Need a Separate Policy', items:['Flood','Earthquake','Sewer Backup','Mudslide'] },
+    { color:'blue', name:'FEMA & Disaster-Related Terms', items:['Declared Disaster Area','National Flood Insurance Program','Base Flood Elevation','100-Year Floodplain'] },
+    { color:'purple', name:'Real Storm Insurance Terms', items:['Named Storm Deductible','Hurricane Deductible','Wind/Hail Deductible','Cosmetic Damage Exclusion'] }
+  ]},
+  { title: "Teen & New Drivers", groups: [
+    { color:'yellow', name:'Ways to Get a Teen Driver on Your Policy', items:['Add as a Listed Driver','Add as an Excluded Driver','Get Their Own Policy','Named Young Driver Surcharge'] },
+    { color:'green', name:'Discounts That Can Lower a Teen’s Premium', items:['Good Student Discount','Driver’s Ed Completion','Telematics Safe-Driving App','Multi-Car Discount'] },
+    { color:'blue', name:'Why Teen Drivers Cost More to Insure', items:['Less Driving Experience','Higher Accident Frequency','Higher Claim Severity','Statistically More Distracted'] },
+    { color:'purple', name:'Real Terms for a Kid Away at College', items:['Distant Student Discount','Resident Student Exclusion','Occasional Operator','Non-Owner Policy'] }
+  ]},
+  { title: "Pet & Family", groups: [
+    { color:'yellow', name:'What Pet Insurance Typically Covers', items:['Accidents','Illnesses','Surgery','Prescription Medication'] },
+    { color:'green', name:'What Pet Insurance Usually Excludes', items:['Pre-Existing Conditions','Routine Checkups','Breeding Costs','Cosmetic Procedures'] },
+    { color:'blue', name:'Homeowners/Renters Angles Involving Pets', items:['Dog Bite Liability','Breed Restrictions','Pet Damage to a Rental','Liability Exclusion for Dangerous Breeds'] },
+    { color:'purple', name:'Insurance for Non-Traditional Pets', items:['Equine Mortality Insurance','Livestock Insurance','Exotic Pet Coverage','Avian Insurance'] }
+  ]},
+  { title: "Retail & Storefront Risk", groups: [
+    { color:'yellow', name:'Common Retail Store Claims', items:['Customer Slip & Fall','Shoplifting Loss','Broken Storefront Window','Employee Injury'] },
+    { color:'green', name:'Coverages a Retail Shop Owner Needs', items:['General Liability','Commercial Property','Business Owners Policy','Workers’ Comp'] },
+    { color:'blue', name:'What a Business Owners Policy Bundles Together', items:['Building Coverage','Business Personal Property Coverage','Business Income Coverage','Employee Dishonesty Coverage'] },
+    { color:'purple', name:'Odd Things a Retail Policy Might Exclude', items:['Cash Left in the Register','Employee Theft','Products Liability','Cyber Breach of POS System'] }
+  ]},
+  { title: "Insurance History & Lingo", groups: [
+    { color:'yellow', name:'Basic Policy Terms', items:['Binder','Rider','Endorsement','Declaration Page'] },
+    { color:'green', name:'The Birth of Modern Insurance', items:['Lloyd’s of London','Marine Insurance','The Great Fire of London','Edward Lloyd’s Coffee House'] },
+    { color:'blue', name:'Insurance Industry Job Titles', items:['Actuary','Underwriter','Claims Adjuster','Broker'] },
+    { color:'purple', name:'Everyday Words That Started in Insurance & Shipping', items:['Average','Salvage','Underwrite','Premium'] }
+  ]},
+  { title: "Landlord Life", groups: [
+    { color:'yellow', name:'What a Landlord Policy Covers', items:['The Building Structure','Loss of Rental Income','Liability for Tenant Injuries','Vandalism by a Tenant'] },
+    { color:'green', name:'What a Landlord Policy Does NOT Cover', items:['Tenant’s Personal Belongings','Tenant’s Liability','Normal Wear and Tear','Tenant’s Own Renters Insurance'] },
+    { color:'blue', name:'Reasons to Require Tenants Carry Renters Insurance', items:['Protects Tenant’s Belongings','Covers Tenant Liability','Reduces Landlord’s Exposure','Often Required in the Lease'] },
+    { color:'purple', name:'Landlord-Specific Endorsements', items:['Loss of Rents Coverage','Fair Rental Value','Vacancy Permit','Ordinance or Law Coverage'] }
+  ]},
+  { title: "Health Insurance Deep Dive", groups: [
+    { color:'yellow', name:'Health Plan Types', items:['HMO','PPO','EPO','POS'] },
+    { color:'green', name:'Health Insurance Cost & Access Terms', items:['Premium','Formulary','Network','Prior Authorization'] },
+    { color:'blue', name:'What ACA Marketplace Plans Must Cover', items:['Preventive Care','Maternity Care','Mental Health Services','Prescription Drugs'] },
+    { color:'purple', name:'Health Insurance Acronyms', items:['HSA','FSA','COBRA','HIPAA'] }
+  ]},
+  { title: "Cyber Risk", groups: [
+    { color:'yellow', name:'Common Cyberattacks Businesses Face', items:['Ransomware','Phishing','Data Breach','DDoS Attack'] },
+    { color:'green', name:'What Cyber Insurance Typically Covers', items:['Data Recovery','Customer Notification Costs','Legal Defense','Ransom Payment'] },
+    { color:'blue', name:'Types of Data a Breach Might Expose', items:['Social Security Numbers','Credit Card Numbers','Medical Records','Login Credentials'] },
+    { color:'purple', name:'Security Terms Insurers Now Ask About on Applications', items:['Multi-Factor Authentication','Endpoint Detection & Response','Employee Security Training','Incident Response Plan'] }
+  ]},
+  { title: "Farm, Ranch & Ag", groups: [
+    { color:'yellow', name:'What Farm & Ranch Insurance Covers', items:['The Farmhouse','Barns & Outbuildings','Livestock','Farm Equipment'] },
+    { color:'green', name:'Types of Crop Insurance', items:['Multi-Peril Crop Insurance','Crop-Hail Insurance','Revenue Protection','Actual Production History Coverage'] },
+    { color:'blue', name:'Farm-Specific Liability Risks', items:['Livestock Escaping Onto a Road','A Farmhand’s Injury','Pesticide Drift Onto a Neighbor’s Land','Farm Stand Customer Slip & Fall'] },
+    { color:'purple', name:'USDA & Government Farm Insurance Terms', items:['Federal Crop Insurance Program','Risk Management Agency','Whole-Farm Revenue Protection','Noninsured Crop Disaster Assistance'] }
+  ]},
+  { title: "On the Water", groups: [
+    { color:'yellow', name:'Watercraft You Might Need to Insure', items:['Pontoon Boat','Jet Ski','Sailboat','High-Value Kayak'] },
+    { color:'green', name:'What Boat Insurance Typically Covers', items:['Hull Damage','Onboard Equipment','Towing & Assistance','Uninsured Boater Coverage'] },
+    { color:'blue', name:'Boating-Specific Liability Risks', items:['Passenger Injury','Water Skier Injury','Dock or Marina Damage','Fuel Spill Liability'] },
+    { color:'purple', name:'Real Marine Insurance Terms', items:['Agreed Hull Value','Protection & Indemnity','General Average','Salvage Rights'] }
+  ]},
+  { title: "Aviation & Drones", groups: [
+    { color:'yellow', name:'Who Needs Aviation Insurance', items:['Private Pilots','Commercial Airlines','Drone Operators','Skydiving Companies'] },
+    { color:'green', name:'What Aviation Insurance Covers', items:['Hull Damage to the Aircraft','Passenger Liability','Third-Party Ground Damage','Medical Payments'] },
+    { color:'blue', name:'Why Commercial Drone Use Needs Its Own Policy', items:['Business-Use Exclusion','FAA Part 107 Rules','Client Contract Requirement','Property Damage Below'] },
+    { color:'purple', name:'Aviation Insurance Vocabulary', items:['Hull War Risk','Combined Single Limit','Non-Owned Aircraft Liability','Loss of License Insurance'] }
+  ]},
+  { title: "Nonprofits & Volunteers", groups: [
+    { color:'yellow', name:'Insurance a Nonprofit Needs', items:['General Liability','D&O Insurance','Property Insurance','Workers’ Comp'] },
+    { color:'green', name:'Who D&O Insurance Actually Protects', items:['Board Members','Officers','The Organization Itself','Volunteers in Leadership Roles'] },
+    { color:'blue', name:'Special Nonprofit Risks', items:['Volunteer Injury','Fundraising Event Liability','Abuse & Molestation Coverage','Employment Practices Claims'] },
+    { color:'purple', name:'Ways Nonprofits Sometimes Get Insurance Cheaper', items:['Risk Purchasing Group','Nonprofit Insurance Alliance','Grant-Funded Coverage','Volunteer Protection Act Immunity'] }
+  ]},
+  { title: "Restaurants & Food Service", groups: [
+    { color:'yellow', name:'Insurance a Restaurant Needs', items:['General Liability','Liquor Liability','Commercial Property','Workers’ Comp'] },
+    { color:'green', name:'Restaurant-Specific Risks', items:['Food Contamination','Kitchen Fire','Slip & Fall on a Wet Floor','Walk-In Cooler Failure'] },
+    { color:'blue', name:'What Spoilage & Equipment Breakdown Protects', items:['Refrigerated Inventory','Walk-In Freezer Contents','Power Outage Losses','Equipment Malfunction'] },
+    { color:'purple', name:'Food Truck-Specific Insurance Needs', items:['Commercial Auto for the Truck','Mobile Vending Permit Proof','Product Liability','Care Custody & Control Coverage'] }
+  ]},
+  { title: "Salons, Gyms & Personal Services", groups: [
+    { color:'yellow', name:'Insurance a Salon or Spa Needs', items:['General Liability','Professional Liability','Commercial Property','Workers’ Comp'] },
+    { color:'green', name:'Personal-Care Business Risks', items:['Allergic Reaction to a Product','Chemical Burn From a Treatment','Slip on a Wet Floor','Client’s Coat Goes Missing'] },
+    { color:'blue', name:'What a Gym or Fitness Studio Should Carry', items:['Participant Accident Coverage','Equipment Breakdown Coverage','Independent Contractor Liability','Property Insurance for Equipment'] },
+    { color:'purple', name:'Waivers, Releases & Their Real Limits', items:['Liability Waiver','Assumption of Risk','Gross Negligence (Not Waivable)','Informed Consent Form'] }
   ]}
 ];
 
@@ -497,20 +629,34 @@ function endGame(won){
     saveStats(stats);
   }
 
+  applyResultText();
+  document.getElementById('statsResultSection').style.display = 'block';
+  showShareCard();
+  renderStats();
+  openModal('statsOverlay');
+}
+
+function applyResultText(){
   const resultHeadline = document.getElementById('resultHeadline');
   const resultAnswer = document.getElementById('resultAnswer');
-  if (won){
-    resultHeadline.textContent = state.mistakes === 0 ? 'Perfect solve!' : 'Nice work!';
-    resultAnswer.textContent = state.mistakes === 0
+  const shareCardHeadline = document.getElementById('shareCardHeadline');
+  let headline, answer;
+  if (state.won){
+    headline = state.mistakes === 0 ? 'Perfect solve!' : 'Nice work!';
+    answer = state.mistakes === 0
       ? 'You found all four groups with zero mistakes.'
       : 'You found all four groups with ' + state.mistakes + ' mistake' + (state.mistakes === 1 ? '' : 's') + '.';
   } else {
-    resultHeadline.textContent = 'So close — try again tomorrow';
-    resultAnswer.textContent = "Here's today's " + '"' + puzzle.title + '"' + ' puzzle, fully solved above.';
+    headline = 'So close — try again tomorrow';
+    answer = "Here's today's " + '"' + puzzle.title + '"' + ' puzzle, fully solved above.';
   }
-  document.getElementById('statsResultSection').style.display = 'block';
-  renderStats();
-  openModal('statsOverlay');
+  resultHeadline.textContent = headline;
+  resultAnswer.textContent = answer;
+  shareCardHeadline.textContent = headline;
+}
+
+function showShareCard(){
+  document.getElementById('shareCard').style.display = 'block';
 }
 
 function submitGuess(){
@@ -567,12 +713,15 @@ submitBtn.addEventListener('click', submitGuess);
 shuffleBtn.addEventListener('click', () => { state.order = shuffle(state.order); saveState(); render(); });
 deselectBtn.addEventListener('click', () => { selected.clear(); render(); });
 
-document.getElementById('shareBtn').addEventListener('click', () => {
+function buildShareText(){
   const rows = state.guessHistory.map(colors => colors.map(c => COLOR_EMOJI[c]).join('')).join('\n');
   const url = location.origin + location.pathname;
-  const text = 'Coverage Connections #' + puzzleNumber() + ' ' + (state.won ? state.mistakes + ' mistake' + (state.mistakes === 1 ? '' : 's') : 'X') +
+  return 'Coverage Connections #' + puzzleNumber() + ' ' + (state.won ? state.mistakes + ' mistake' + (state.mistakes === 1 ? '' : 's') : 'X') +
     '\n' + rows + '\n\nCan you find all four groups? Play at ' + url + '\nThe Insurance Center · (801) 622-2626 #TheInsuranceCenter';
-  const copiedMsg = document.getElementById('copiedMsg');
+}
+
+function copyShareText(msgEl){
+  const text = buildShareText();
   function fallbackCopy(str){
     const ta = document.createElement('textarea');
     ta.value = str; ta.style.position = 'fixed'; ta.style.opacity = '0';
@@ -580,11 +729,14 @@ document.getElementById('shareBtn').addEventListener('click', () => {
     try { document.execCommand('copy'); } catch(e) {}
     document.body.removeChild(ta);
   }
-  function showCopied(){ copiedMsg.textContent = 'Copied to clipboard!'; setTimeout(() => copiedMsg.textContent = '', 2000); }
+  function showCopied(){ msgEl.textContent = 'Copied to clipboard!'; setTimeout(() => msgEl.textContent = '', 2000); }
   if (navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(showCopied).catch(() => { fallbackCopy(text); showCopied(); });
   } else { fallbackCopy(text); showCopied(); }
-});
+}
+
+document.getElementById('shareBtn').addEventListener('click', () => copyShareText(document.getElementById('copiedMsg')));
+document.getElementById('shareBtnMain').addEventListener('click', () => copyShareText(document.getElementById('copiedMsgMain')));
 
 function openModal(id){ document.getElementById(id).classList.add('open'); }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
@@ -601,18 +753,9 @@ render();
 renderStats();
 if (state.finished){
   document.getElementById('statsResultSection').style.display = 'block';
-  const resultHeadline = document.getElementById('resultHeadline');
-  const resultAnswer = document.getElementById('resultAnswer');
-  if (state.won){
-    resultHeadline.textContent = state.mistakes === 0 ? 'Perfect solve!' : 'Nice work!';
-    resultAnswer.textContent = state.mistakes === 0
-      ? 'You found all four groups with zero mistakes.'
-      : 'You found all four groups with ' + state.mistakes + ' mistake' + (state.mistakes === 1 ? '' : 's') + '.';
-  } else {
-    resultHeadline.textContent = 'So close — try again tomorrow';
-    resultAnswer.textContent = "Here's today's " + '"' + puzzle.title + '"' + ' puzzle, fully solved above.';
-  }
-} else if (state.guesses === undefined && state.guessHistory.length === 0 && state.solvedGroupIdxs.length === 0){
+  applyResultText();
+  showShareCard();
+} else if (state.guessHistory.length === 0 && state.solvedGroupIdxs.length === 0){
   openModal('helpOverlay');
 }
 </script>
