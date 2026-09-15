@@ -82,21 +82,6 @@
 
   #gameCard.pending { visibility: hidden; }
 
-  .mode-select { margin-top: 4px; padding-top: 14px; border-top: 1px solid var(--border-soft); }
-  .mode-select-label {
-    font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px;
-    color: var(--text-faint); text-align: center; margin-bottom: 8px;
-  }
-  .mode-btn-row { display: flex; gap: 8px; }
-  .mode-choice-btn {
-    flex: 1; padding: 12px; border-radius: var(--radius); border: 1px solid var(--border);
-    background: var(--bg); color: var(--text); font-weight: 700; font-size: 13px;
-    text-transform: uppercase; letter-spacing: 0.4px; cursor: pointer;
-    transition: background 0.15s, border-color 0.15s, color 0.15s;
-  }
-  .mode-choice-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
-  .mode-select-desc { font-size: 12px; color: var(--text-dim); text-align: center; margin: 10px 0 0; }
-
   .card {
     background: var(--card);
     border: 1px solid var(--border-soft);
@@ -365,15 +350,7 @@
     </div>
     <p>Every guess checks four things: <strong style="color:var(--text);">Line</strong> (personal or commercial), <strong style="color:var(--text);">Family</strong> of coverage, what it mainly <strong style="color:var(--text);">Protects</strong>, and whether it's typically <strong style="color:var(--text);">Required</strong>.</p>
     <p>Miss twice and the coverage family unlocks. Miss four times and you'll get a fun fact.</p>
-
-    <div class="mode-select">
-      <div class="mode-select-label">Choose your mode</div>
-      <div class="mode-btn-row">
-        <button class="mode-choice-btn" id="modeNormalBtn" type="button">Normal</button>
-        <button class="mode-choice-btn" id="modeHardBtn" type="button">Hard Mode</button>
-      </div>
-      <p class="mode-select-desc">Hard Mode blacks out key words in the scenario until you guess — one more word reveals with every try.</p>
-    </div>
+    <p>Key words in the scenario start blacked out — one more reveals with every guess you make.</p>
   </div>
 </div>
 
@@ -614,37 +591,17 @@ const statsResultSection = document.getElementById('statsResultSection');
 const guessBtn = document.getElementById('guessBtn');
 const guessInput = document.getElementById('guessInput');
 const gameCard = document.getElementById('gameCard');
-const modeNormalBtn = document.getElementById('modeNormalBtn');
-const modeHardBtn = document.getElementById('modeHardBtn');
-
-let hardMode = localStorage.getItem('coveragle_hardmode') === '1';
-
-function updateModeButtons(){
-  modeNormalBtn.classList.toggle('active', !hardMode);
-  modeHardBtn.classList.toggle('active', hardMode);
-}
-updateModeButtons();
-
-function setHardMode(val){
-  hardMode = val;
-  localStorage.setItem('coveragle_hardmode', hardMode ? '1' : '0');
-  updateModeButtons();
-  renderScenario();
-}
 
 function revealGame(){
   gameCard.classList.remove('pending');
   renderScenario();
 }
 
-modeNormalBtn.addEventListener('click', () => { setHardMode(false); closeModal('helpOverlay'); revealGame(); });
-modeHardBtn.addEventListener('click', () => { setHardMode(true); closeModal('helpOverlay'); revealGame(); });
-
 if (state.guesses.length === 0 && !state.finished){
   gameCard.classList.add('pending');
 }
 
-// pick up to 3 "giveaway" words to redact in hard mode, deterministic per scenario
+// pick up to 3 "giveaway" words to redact until they're earned by guessing
 function redactTargets(sentence){
   const words = sentence.split(/\s+/);
   const candidates = words
@@ -656,7 +613,7 @@ function redactTargets(sentence){
 
 function renderScenario(){
   const words = answer.s.split(/\s+/);
-  if (!hardMode || state.finished){
+  if (state.finished){
     scenarioBox.textContent = answer.s;
     return;
   }
