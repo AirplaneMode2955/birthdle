@@ -91,6 +91,12 @@
   }
 
   .instructions { font-size: 13px; color: var(--text-dim); text-align: center; margin-bottom: 12px; line-height: 1.5; }
+  .legend-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 14px; }
+  .legend-chip { border-radius: 8px; padding: 8px 6px; text-align: center; font-size: 12px; font-weight: 700; }
+  .legend-chip.yellow { background: var(--c-yellow-bg); color: var(--c-yellow-text); }
+  .legend-chip.green  { background: var(--c-green-bg);  color: var(--c-green-text); }
+  .legend-chip.blue   { background: var(--c-blue-bg);   color: var(--c-blue-text); }
+  .legend-chip.purple { background: var(--c-purple-bg); color: var(--c-purple-text); }
 
   .mistakes-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 14px; font-size: 11px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.5px; }
   .mistakes-dots { display: flex; gap: 6px; }
@@ -229,7 +235,8 @@
   </header>
 
   <div class="card">
-    <div class="instructions">Find four groups of four connected terms. Yellow's the easy one — purple is where it gets sneaky.</div>
+    <div class="instructions">Sort each of the 16 situations below into the kind of insurance that covers it.</div>
+    <div class="legend-grid" id="legendGrid"></div>
     <div class="mistakes-row">
       Mistakes remaining
       <div class="mistakes-dots" id="mistakesDots"></div>
@@ -272,12 +279,12 @@
   <div class="modal">
     <button class="modal-close" id="helpClose">✕</button>
     <h2>How to play</h2>
-    <p>Tap 4 tiles you think share a hidden connection, then hit Submit. Find all 4 groups before you run out of mistakes.</p>
-    <div class="legend-row"><div class="legend-swatch" style="background:var(--c-yellow-bg);"></div><p style="margin:0;">Straightforward</p></div>
-    <div class="legend-row"><div class="legend-swatch" style="background:var(--c-green-bg);"></div><p style="margin:0;">Medium</p></div>
-    <div class="legend-row"><div class="legend-swatch" style="background:var(--c-blue-bg);"></div><p style="margin:0;">Tricky</p></div>
-    <div class="legend-row"><div class="legend-swatch" style="background:var(--c-purple-bg);"></div><p style="margin:0;">Sneaky — usually wordplay or a trap</p></div>
-    <p>You get 4 mistakes. If 3 of your 4 tiles belong together, you'll get an "one away" nudge. Some terms are decoys that look like they belong somewhere else — that's the game.</p>
+    <p>Every day has the same 4 buckets — shown at the top of the board:</p>
+    <div class="legend-row"><div class="legend-swatch" style="background:var(--c-yellow-bg);"></div><p style="margin:0;">🚗 Car Insurance</p></div>
+    <div class="legend-row"><div class="legend-swatch" style="background:var(--c-green-bg);"></div><p style="margin:0;">🏠 Home Insurance</p></div>
+    <div class="legend-row"><div class="legend-swatch" style="background:var(--c-blue-bg);"></div><p style="margin:0;">❤️ Health Insurance</p></div>
+    <div class="legend-row"><div class="legend-swatch" style="background:var(--c-purple-bg);"></div><p style="margin:0;">👪 Life Insurance</p></div>
+    <p>Tap 4 tiles that all belong to the same bucket, then hit Submit. You get 4 mistakes to sort all 16. If 3 of your 4 picks were right, you'll get a "one away" nudge.</p>
   </div>
 </div>
 
@@ -304,66 +311,26 @@
 const COLOR_ORDER = ['yellow','green','blue','purple'];
 const COLOR_EMOJI = { yellow:'🟨', green:'🟩', blue:'🟦', purple:'🟪' };
 
-const PUZZLES = [
-  { title: "The Basics", groups: [
-    { color:'yellow', name:'Car Insurance', items:['Liability','Collision','Comprehensive','Full Coverage'] },
-    { color:'green', name:'Home Insurance', items:['Homeowners','Renters','Flood','Fire'] },
-    { color:'blue', name:'Life Insurance', items:['Term Life','Whole Life','Beneficiary','Death Benefit'] },
-    { color:'purple', name:'Health Insurance', items:['Copay','Deductible','Premium','Network'] }
+const CATEGORIES = [
+  { color:'yellow', name:'\ud83d\ude97 Car Insurance', bank: [
+    'A Fender Bender','A Flat Tire on the Highway','Your Car Gets Stolen','A Cracked Windshield',
+    'Hitting a Deer','A Hit-and-Run','A Speeding Ticket','Your Car Gets Towed',
+    'A Rental Car After an Accident','Hail Damage to Your Car','Backing Into a Mailbox','Running Out of Gas on the Freeway'
   ]},
-  { title: "Common Insurance Words", groups: [
-    { color:'yellow', name:'Words on Every Policy', items:['Policy','Premium','Deductible','Coverage'] },
-    { color:'green', name:'People Involved in Insurance', items:['Your Agent','The Adjuster','You (The Policyholder)','The Insurance Company'] },
-    { color:'blue', name:'What Happens When You File a Claim', items:['You Report the Damage','An Adjuster Checks It Out','You Get an Estimate','You Get Paid'] },
-    { color:'purple', name:'Insurance Ad Buzzwords', items:['Bundle and Save','Accident Forgiveness','Good Driver Discount','Multi-Policy Discount'] }
+  { color:'green', name:'\ud83c\udfe0 Home Insurance', bank: [
+    'A House Fire','A Burst Pipe','A Break-In','A Fallen Tree on Your Roof',
+    'A Leaky Roof','Your Neighbor\u2019s Kid Gets Hurt in Your Yard','A Broken Window','A Flooded Basement',
+    'Your Dog Bites a Guest','A Stolen Bike From Your Garage','Storm Damage to Your Fence','A Kitchen Fire'
   ]},
-  { title: "Car Insurance 101", groups: [
-    { color:'yellow', name:'Basic Car Coverage Types', items:['Liability','Collision','Comprehensive','Uninsured Motorist'] },
-    { color:'green', name:'Handy Add-Ons', items:['Roadside Assistance','Rental Car Coverage','New Car Replacement','Gap Insurance'] },
-    { color:'blue', name:'Things That Raise Your Rate', items:['An Accident','A Speeding Ticket','A DUI','Bad Credit'] },
-    { color:'purple', name:'Discounts You Might Already Qualify For', items:['Good Student Discount','Safe Driver Discount','Multi-Car Discount','Bundling Discount'] }
+  { color:'blue', name:'\u2764\ufe0f Health Insurance', bank: [
+    'A Doctor\u2019s Visit','A Broken Arm','A Hospital Stay','A Prescription',
+    'Getting Stitches','An Annual Checkup','An X-Ray','A Surgery',
+    'An Emergency Room Visit','A Flu Shot','Physical Therapy','A Blood Test'
   ]},
-  { title: "Home & Renters Insurance", groups: [
-    { color:'yellow', name:'Types of Home Coverage', items:['Homeowners Insurance','Renters Insurance','Condo Insurance','Landlord Insurance'] },
-    { color:'green', name:'What It Covers', items:['Fire','Theft','Storm Damage','Vandalism'] },
-    { color:'blue', name:'Needs Its Own Policy', items:['Flood Insurance','Earthquake Insurance','Jewelry Coverage','Sewer Backup'] },
-    { color:'purple', name:'Not Actually Insurance', items:['Home Warranty','HOA Dues','A Home Inspection','Title Insurance'] }
-  ]},
-  { title: "Life Insurance Basics", groups: [
-    { color:'yellow', name:'Types of Life Insurance', items:['Term Life','Whole Life','Universal Life','Group Life'] },
-    { color:'green', name:'Life Insurance Words', items:['Beneficiary','Death Benefit','Premium','Policy Term'] },
-    { color:'blue', name:'Why People Get Life Insurance', items:['To Pay Off the Mortgage','To Replace Lost Income','To Cover Funeral Costs','To Leave Money to Family'] },
-    { color:'purple', name:'Myths About Life Insurance', items:['"I\u2019m Too Young for It"','"It\u2019s Too Expensive"','"My Job\u2019s Policy Is Enough"','"I\u2019m Healthy, I Don\u2019t Need It"'] }
-  ]},
-  { title: "Health Insurance Basics", groups: [
-    { color:'yellow', name:'Health Plan Types', items:['HMO','PPO','Medicare','Medicaid'] },
-    { color:'green', name:'Words From Your Insurance Card', items:['Premium','Deductible','Copay','Coinsurance'] },
-    { color:'blue', name:'Terms You Learn the Hard Way', items:['In-Network','Out-of-Network','Prior Authorization','Out-of-Pocket Max'] },
-    { color:'purple', name:'Common Health Insurance Acronyms', items:['HSA','FSA','COBRA','HIPAA'] }
-  ]},
-  { title: "Filing a Claim", groups: [
-    { color:'yellow', name:'People in a Claim', items:['You (The Policyholder)','The Insurance Agent','The Adjuster','The Other Driver'] },
-    { color:'green', name:'What You\u2019ll Need', items:['A Police Report','Photos of the Damage','A Repair Estimate','Your Policy Number'] },
-    { color:'blue', name:'What Happens Next', items:['The Adjuster Inspects It','The Company Reviews It','You Get an Offer','You Get Paid'] },
-    { color:'purple', name:'Claims Words Worth Knowing', items:['Deductible','Total Loss','Settlement','Denied'] }
-  ]},
-  { title: "Pet Insurance", groups: [
-    { color:'yellow', name:'What It Covers', items:['Accidents','Illnesses','Surgery','Medication'] },
-    { color:'green', name:'What It Doesn\u2019t Cover', items:['Pre-Existing Conditions','Routine Checkups','Grooming','Breeding'] },
-    { color:'blue', name:'How It Works', items:['You Pay the Vet First','You Submit a Claim','You Get Reimbursed','Based on a Set Percentage'] },
-    { color:'purple', name:'Other Pets People Insure', items:['Horses','Birds','Exotic Pets','Livestock'] }
-  ]},
-  { title: "Small Business Insurance", groups: [
-    { color:'yellow', name:'Insurance a Business Needs', items:['General Liability','Property Insurance','Workers\u2019 Comp','Commercial Auto'] },
-    { color:'green', name:'Why a Business Needs It', items:['A Customer Gets Hurt','A Fire Damages the Shop','An Employee Gets Injured','A Delivery Truck Crashes'] },
-    { color:'blue', name:'Small Business Insurance Words', items:['Liability','Premium','Policy Limit','Deductible'] },
-    { color:'purple', name:'Not Insurance, Just Legal Paperwork', items:['An LLC','A Business License','An EIN','A Lease'] }
-  ]},
-  { title: "Insurance Ads You've Definitely Heard", groups: [
-    { color:'yellow', name:'Ways Companies Advertise Savings', items:['Bundle and Save','Switch and Save','A Free Quote','No Deposit'] },
-    { color:'green', name:'Discounts People Actually Get', items:['Good Driver Discount','Good Student Discount','Multi-Car Discount','Homeowner Discount'] },
-    { color:'blue', name:'Perks Some Companies Offer', items:['Accident Forgiveness','24/7 Claims Service','A Mobile App','Roadside Assistance'] },
-    { color:'purple', name:'What These Phrases Actually Mean', items:['"Full Coverage" Isn\u2019t One Specific Thing','"Total Loss" Doesn\u2019t Mean Worthless','"Actual Cash Value" Isn\u2019t What You Paid','"Pre-Existing" Means Before You Signed Up'] }
+  { color:'purple', name:'\ud83d\udc6a Life Insurance', bank: [
+    'Paying Off the Mortgage','Covering Funeral Costs','Replacing Lost Income for Your Family','Leaving Money to Your Kids',
+    'Paying Off Debt After You\u2019re Gone','Supporting a Spouse Who Doesn\u2019t Work','A Business Partner Buyout','Paying for College Later',
+    'A Death Benefit Payout','Naming a Beneficiary','Continuing Your Family\u2019s Lifestyle','Covering Final Medical Bills'
   ]}
 ];
 
@@ -378,9 +345,6 @@ function todayKey(){
   const d = new Date();
   return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
 }
-function getDailyIndex(){
-  return hashStr('conn-' + todayKey()) % PUZZLES.length;
-}
 function puzzleNumber(){
   const epoch = new Date(2026,8,15);
   const now = new Date();
@@ -388,7 +352,27 @@ function puzzleNumber(){
   return Math.max(1, diffDays + 1);
 }
 
-const puzzle = PUZZLES[getDailyIndex()];
+// Deterministic per-category shuffle so everyone gets the same 4-of-12
+// picks on a given day, without repeating the same 16 tiles every day.
+function seededPick4(bank, seedStr){
+  let seed = hashStr(seedStr);
+  function rand(){ seed = (seed * 1103515245 + 12345) >>> 0; return seed / 4294967296; }
+  const arr = bank.slice();
+  for (let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(rand() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr.slice(0, 4);
+}
+
+const puzzle = {
+  title: 'Sort the Situation',
+  groups: CATEGORIES.map(cat => ({
+    color: cat.color,
+    name: cat.name,
+    items: seededPick4(cat.bank, 'conn-' + todayKey() + '-' + cat.color)
+  }))
+};
 const canon = [];
 puzzle.groups.forEach((g, gi) => g.items.forEach(name => canon.push({ name, groupIdx: gi })));
 
@@ -427,6 +411,14 @@ function loadStats(){
 function saveStats(s){ localStorage.setItem(statsKey, JSON.stringify(s)); }
 
 document.getElementById('puzzleNum').textContent = '#' + puzzleNumber();
+
+const legendGridEl = document.getElementById('legendGrid');
+CATEGORIES.forEach(cat => {
+  const chip = document.createElement('div');
+  chip.className = 'legend-chip ' + cat.color;
+  chip.textContent = cat.name;
+  legendGridEl.appendChild(chip);
+});
 
 const gridEl = document.getElementById('grid');
 const solvedBarsEl = document.getElementById('solvedBars');
