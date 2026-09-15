@@ -741,7 +741,7 @@ function finishGame(){
   hintBox.textContent = person.h;
   resultHeadline.textContent = state.won ? 'Nailed it!' : 'So close — try again tomorrow';
   resultHeadline.classList.toggle('win', state.won);
-  resultAnswer.textContent = person.n + ' was born ' + MONTHS[person.m-1] + ' ' + person.d + ', ' + person.y + '.';
+  resultAnswer.textContent = person.n + ' was born ' + MONTHS[person.m-1] + ' ' + person.d + ', ' + person.y + ', in ' + person.co + '.';
   statsResultSection.style.display = 'block';
 
   const stats = loadStats();
