@@ -305,131 +305,65 @@ const COLOR_ORDER = ['yellow','green','blue','purple'];
 const COLOR_EMOJI = { yellow:'🟨', green:'🟩', blue:'🟦', purple:'🟪' };
 
 const PUZZLES = [
-  { title: "Coverage Basics", groups: [
-    { color:'yellow', name:'Car Insurance Coverages', items:['Liability','Collision','Comprehensive','Roadside Assistance'] },
-    { color:'green', name:'Home Insurance Add-Ons', items:['Flood Insurance','Earthquake Insurance','Water Backup Coverage','Jewelry Coverage'] },
-    { color:'blue', name:'Reasons a Claim Gets Denied', items:['Left the Home Vacant','Lied on the Application','Damage Was Intentional','Stopped Paying Premiums'] },
-    { color:'purple', name:'Insurance Words With a Double Life', items:['Binder','Premium','Policy','Claim'] }
+  { title: "The Basics", groups: [
+    { color:'yellow', name:'Car Insurance', items:['Liability','Collision','Comprehensive','Full Coverage'] },
+    { color:'green', name:'Home Insurance', items:['Homeowners','Renters','Flood','Fire'] },
+    { color:'blue', name:'Life Insurance', items:['Term Life','Whole Life','Beneficiary','Death Benefit'] },
+    { color:'purple', name:'Health Insurance', items:['Copay','Deductible','Premium','Network'] }
   ]},
-  { title: "On the Road", groups: [
-    { color:'yellow', name:'Vehicles People Insure', items:['Motorcycle','RV','Boat','ATV'] },
-    { color:'green', name:'Handy Car Insurance Add-Ons', items:['Rental Car Coverage','New Car Replacement','Roadside Assistance','Gap Insurance'] },
-    { color:'blue', name:'What Raises Your Car Insurance Rate', items:['An At-Fault Accident','A Speeding Ticket','A DUI','A Lapse in Coverage'] },
-    { color:'purple', name:'Who Uninsured Motorist Coverage Protects You From', items:['A Driver With No Insurance','A Hit-and-Run Driver','An Underinsured Driver','A "Phantom" Driver'] }
+  { title: "Common Insurance Words", groups: [
+    { color:'yellow', name:'Words on Every Policy', items:['Policy','Premium','Deductible','Coverage'] },
+    { color:'green', name:'People Involved in Insurance', items:['Your Agent','The Adjuster','You (The Policyholder)','The Insurance Company'] },
+    { color:'blue', name:'What Happens When You File a Claim', items:['You Report the Damage','An Adjuster Checks It Out','You Get an Estimate','You Get Paid'] },
+    { color:'purple', name:'Insurance Ad Buzzwords', items:['Bundle and Save','Accident Forgiveness','Good Driver Discount','Multi-Policy Discount'] }
   ]},
-  { title: "Home Sweet Home", groups: [
-    { color:'yellow', name:'Types of Home Insurance', items:['Homeowners Insurance','Renters Insurance','Condo Insurance','Landlord Insurance'] },
-    { color:'green', name:'What a Standard Home Policy Covers', items:['Fire','Wind & Hail','Theft','Vandalism'] },
-    { color:'blue', name:'Needs Its Own Separate Policy', items:['Flood','Earthquake','Sewer Backup','Home Business Equipment'] },
-    { color:'purple', name:'Not the Same Thing as Home Insurance', items:['Home Warranty','Title Insurance','Home Inspection','HOA Dues'] }
+  { title: "Car Insurance 101", groups: [
+    { color:'yellow', name:'Basic Car Coverage Types', items:['Liability','Collision','Comprehensive','Uninsured Motorist'] },
+    { color:'green', name:'Handy Add-Ons', items:['Roadside Assistance','Rental Car Coverage','New Car Replacement','Gap Insurance'] },
+    { color:'blue', name:'Things That Raise Your Rate', items:['An Accident','A Speeding Ticket','A DUI','Bad Credit'] },
+    { color:'purple', name:'Discounts You Might Already Qualify For', items:['Good Student Discount','Safe Driver Discount','Multi-Car Discount','Bundling Discount'] }
   ]},
-  { title: "Weddings & Events", groups: [
-    { color:'yellow', name:'Reasons You\u2019d File a Wedding Claim', items:['Vendor No-Show','Venue Fire','Extreme Weather','Sudden Illness'] },
-    { color:'green', name:'What\u2019s Inside a Wedding Policy', items:['Liability Coverage','Liquor Liability','Cancellation Coverage','Postponement Coverage'] },
-    { color:'blue', name:'Who Might Require Event Insurance', items:['The Venue','The Caterer','The City (Permit)','The Rental Company'] },
-    { color:'purple', name:'Real (and Real Weird) Wedding Terms', items:['Rain Date Clause','Named Storm Deductible','Host Liquor Liability','Cold Feet Exclusion'] }
+  { title: "Home & Renters Insurance", groups: [
+    { color:'yellow', name:'Types of Home Coverage', items:['Homeowners Insurance','Renters Insurance','Condo Insurance','Landlord Insurance'] },
+    { color:'green', name:'What It Covers', items:['Fire','Theft','Storm Damage','Vandalism'] },
+    { color:'blue', name:'Needs Its Own Policy', items:['Flood Insurance','Earthquake Insurance','Jewelry Coverage','Sewer Backup'] },
+    { color:'purple', name:'Not Actually Insurance', items:['Home Warranty','HOA Dues','A Home Inspection','Title Insurance'] }
   ]},
-  { title: "Short-Term Rentals", groups: [
-    { color:'yellow', name:'Why a Home Policy Denies an Airbnb Claim', items:['Running a Business at Home','Renting It Out Often','A Guest Gets Hurt','A Guest Steals Something'] },
-    { color:'green', name:'What a Rental Host Actually Needs', items:['Short-Term Rental Endorsement','Business Liability Coverage','Lost Rental Income','A Landlord Policy Upgrade'] },
-    { color:'blue', name:'Airbnb/VRBO Terms \u2014 Not Insurance At All', items:['Host Guarantee','Superhost Status','Instant Book','Cleaning Fee'] },
-    { color:'purple', name:'Real Insurance Disguised as a Platform Perk', items:['Host Protection Insurance','AirCover for Hosts','Experience Coverage','Property Damage Protection'] }
+  { title: "Life Insurance Basics", groups: [
+    { color:'yellow', name:'Types of Life Insurance', items:['Term Life','Whole Life','Universal Life','Group Life'] },
+    { color:'green', name:'Life Insurance Words', items:['Beneficiary','Death Benefit','Premium','Policy Term'] },
+    { color:'blue', name:'Why People Get Life Insurance', items:['To Pay Off the Mortgage','To Replace Lost Income','To Cover Funeral Costs','To Leave Money to Family'] },
+    { color:'purple', name:'Myths About Life Insurance', items:['"I\u2019m Too Young for It"','"It\u2019s Too Expensive"','"My Job\u2019s Policy Is Enough"','"I\u2019m Healthy, I Don\u2019t Need It"'] }
   ]},
-  { title: "Teen & New Drivers", groups: [
-    { color:'yellow', name:'Ways to Add a Teen to Your Policy', items:['List Them as a Driver','Exclude Them From Coverage','Get Them Their Own Policy','Add a Young Driver Surcharge'] },
-    { color:'green', name:'Discounts That Lower a Teen\u2019s Rate', items:['Good Student Discount','Driver\u2019s Ed Completion','A Safe-Driving App','Multi-Car Discount'] },
-    { color:'blue', name:'Why Teen Drivers Cost More to Insure', items:['Less Driving Experience','More Frequent Accidents','More Severe Accidents','More Likely to Be Distracted'] },
-    { color:'purple', name:'Real Terms for a Kid Away at College', items:['Distant Student Discount','Excluded While Away','Still Covered Occasionally','A Policy With No Car'] }
+  { title: "Health Insurance Basics", groups: [
+    { color:'yellow', name:'Health Plan Types', items:['HMO','PPO','Medicare','Medicaid'] },
+    { color:'green', name:'Words From Your Insurance Card', items:['Premium','Deductible','Copay','Coinsurance'] },
+    { color:'blue', name:'Terms You Learn the Hard Way', items:['In-Network','Out-of-Network','Prior Authorization','Out-of-Pocket Max'] },
+    { color:'purple', name:'Common Health Insurance Acronyms', items:['HSA','FSA','COBRA','HIPAA'] }
   ]},
-  { title: "Pet & Family", groups: [
-    { color:'yellow', name:'What Pet Insurance Covers', items:['Accidents','Illnesses','Surgery','Prescription Medication'] },
-    { color:'green', name:'What Pet Insurance Excludes', items:['Pre-Existing Conditions','Routine Checkups','Breeding Costs','Cosmetic Procedures'] },
-    { color:'blue', name:'Pets & Your Home Insurance', items:['Dog Bite Liability','Breed Restrictions','Pet Damage to a Rental','Excluded "Dangerous" Breeds'] },
-    { color:'purple', name:'Insurance for Unusual Pets', items:['Horse Insurance','Livestock Insurance','Exotic Pet Coverage','Bird Insurance'] }
+  { title: "Filing a Claim", groups: [
+    { color:'yellow', name:'People in a Claim', items:['You (The Policyholder)','The Insurance Agent','The Adjuster','The Other Driver'] },
+    { color:'green', name:'What You\u2019ll Need', items:['A Police Report','Photos of the Damage','A Repair Estimate','Your Policy Number'] },
+    { color:'blue', name:'What Happens Next', items:['The Adjuster Inspects It','The Company Reviews It','You Get an Offer','You Get Paid'] },
+    { color:'purple', name:'Claims Words Worth Knowing', items:['Deductible','Total Loss','Settlement','Denied'] }
   ]},
-  { title: "Weather & Disaster", groups: [
-    { color:'yellow', name:'Covered by Standard Homeowners', items:['Wind','Hail','Lightning','Fire'] },
-    { color:'green', name:'Needs Its Own Policy', items:['Flood','Earthquake','Sewer Backup','Mudslide'] },
-    { color:'blue', name:'Why Your Payout Might Be Smaller Than You Think', items:['A Higher Storm Deductible','Value Based on Depreciation','A Cap on Certain Items','Cosmetic Damage Excluded'] },
-    { color:'purple', name:'Government Disaster Terms Worth Knowing', items:['Declared Disaster Area','National Flood Insurance Program','A Flood Zone Map','FEMA Assistance'] }
+  { title: "Pet Insurance", groups: [
+    { color:'yellow', name:'What It Covers', items:['Accidents','Illnesses','Surgery','Medication'] },
+    { color:'green', name:'What It Doesn\u2019t Cover', items:['Pre-Existing Conditions','Routine Checkups','Grooming','Breeding'] },
+    { color:'blue', name:'How It Works', items:['You Pay the Vet First','You Submit a Claim','You Get Reimbursed','Based on a Set Percentage'] },
+    { color:'purple', name:'Other Pets People Insure', items:['Horses','Birds','Exotic Pets','Livestock'] }
   ]},
-  { title: "Gig Economy Driving", groups: [
-    { color:'yellow', name:'Popular Gig & Rideshare Apps', items:['Uber','Lyft','DoorDash','Instacart'] },
-    { color:'green', name:'What\u2019s Happening During a Rideshare Trip', items:['Waiting for a Match','Driving to Pick Up','Driving With a Passenger','App Turned Off'] },
-    { color:'blue', name:'Why Your Own Car Insurance Won\u2019t Cover It', items:['Using the Car for Business','Paid Rides Are Excluded','You Never Told Your Insurer','It\u2019s Now "Commercial" Use'] },
-    { color:'purple', name:'Insurance Made for Gig Drivers', items:['A Rideshare Add-On','A Gig Driver Policy','Coverage Between Rides','A Personal + Business Blend'] }
+  { title: "Small Business Insurance", groups: [
+    { color:'yellow', name:'Insurance a Business Needs', items:['General Liability','Property Insurance','Workers\u2019 Comp','Commercial Auto'] },
+    { color:'green', name:'Why a Business Needs It', items:['A Customer Gets Hurt','A Fire Damages the Shop','An Employee Gets Injured','A Delivery Truck Crashes'] },
+    { color:'blue', name:'Small Business Insurance Words', items:['Liability','Premium','Policy Limit','Deductible'] },
+    { color:'purple', name:'Not Insurance, Just Legal Paperwork', items:['An LLC','A Business License','An EIN','A Lease'] }
   ]},
-  { title: "Landlord Life", groups: [
-    { color:'yellow', name:'What a Landlord Policy Covers', items:['The Building Itself','Lost Rent During Repairs','Injuries to a Tenant','Damage a Tenant Causes'] },
-    { color:'green', name:'What It Does NOT Cover', items:['The Tenant\u2019s Furniture','The Tenant\u2019s Liability','Normal Wear and Tear','The Tenant\u2019s Own Renters Policy'] },
-    { color:'blue', name:'Why Landlords Require Renters Insurance', items:['Protects the Tenant\u2019s Stuff','Covers the Tenant\u2019s Liability','Takes Pressure off the Landlord','Often Required in the Lease'] },
-    { color:'purple', name:'Real Landlord Insurance Add-Ons', items:['Lost Rent Coverage','"Fair Rental Value" Coverage','Coverage for a Trashed Rental','Coverage for a Vacant Rental'] }
-  ]},
-  { title: "Restaurants & Food Service", groups: [
-    { color:'yellow', name:'Insurance a Restaurant Needs', items:['General Liability','Liquor Liability','Property Insurance','Workers\u2019 Comp'] },
-    { color:'green', name:'Risks Every Restaurant Faces', items:['Food Poisoning Claims','A Kitchen Fire','A Slip on a Wet Floor','A Broken Walk-In Cooler'] },
-    { color:'blue', name:'What Spoilage Coverage Protects', items:['Food in the Freezer','Food Lost to a Power Outage','Food Lost to Equipment Failure','Refrigerated Deliveries'] },
-    { color:'purple', name:'Extra Coverage a Food Truck Needs', items:['Insurance for the Truck','Proof of Insurance for a Permit','Coverage If Your Food Hurts Someone','Coverage While Parked at an Event'] }
-  ]},
-  { title: "Salons, Gyms & Personal Services", groups: [
-    { color:'yellow', name:'Insurance a Salon or Spa Needs', items:['General Liability','Professional Liability','Property Insurance','Workers\u2019 Comp'] },
-    { color:'green', name:'Things That Actually Go Wrong', items:['An Allergic Reaction','A Chemical Burn','A Slip on a Wet Floor','A Client\u2019s Missing Coat'] },
-    { color:'blue', name:'What a Gym Should Carry', items:['Coverage If a Member Gets Hurt','Coverage If Equipment Breaks','Coverage for Independent Trainers','Coverage for the Equipment'] },
-    { color:'purple', name:'What a Waiver Doesn\u2019t Actually Cover', items:['A Signed Liability Waiver','"Assuming the Risk"','Gross Negligence','A Signed Consent Form'] }
-  ]},
-  { title: "Cyber Risk", groups: [
-    { color:'yellow', name:'Common Cyberattacks', items:['Ransomware','Phishing','Data Breach','DDoS Attack'] },
-    { color:'green', name:'What Cyber Insurance Covers', items:['Data Recovery','Customer Notification Costs','Legal Defense','Ransom Payment'] },
-    { color:'blue', name:'What a Breach Might Expose', items:['Social Security Numbers','Credit Card Numbers','Medical Records','Login Passwords'] },
-    { color:'purple', name:'What Insurers Ask Before They\u2019ll Cover You', items:['Two-Factor Login','Antivirus Software','Employee Phishing Training','A Breach Response Plan'] }
-  ]},
-  { title: "Health Insurance", groups: [
-    { color:'yellow', name:'Health Coverage Everyone\u2019s Heard Of', items:['HMO','PPO','Medicare','Medicaid'] },
-    { color:'green', name:'Terms From Your Pay Stub', items:['Premium','Deductible','Copay','Coinsurance'] },
-    { color:'blue', name:'Terms You Learn the Hard Way', items:['Prior Authorization','In-Network vs. Out-of-Network','Your Drug Formulary','Out-of-Pocket Maximum'] },
-    { color:'purple', name:'Acronyms Everyone Has, Nobody Explains', items:['HSA','FSA','COBRA','HIPAA'] }
-  ]},
-  { title: "On the Water", groups: [
-    { color:'yellow', name:'Watercraft You Might Insure', items:['Pontoon Boat','Jet Ski','Sailboat','High-Value Kayak'] },
-    { color:'green', name:'What Boat Insurance Covers', items:['Hull Damage','Onboard Equipment','Towing & Assistance','Uninsured Boater Coverage'] },
-    { color:'blue', name:'Boating Liability Risks', items:['Passenger Injury','Water Skier Injury','Dock or Marina Damage','A Fuel Spill'] },
-    { color:'purple', name:'Boat Insurance Surprises', items:['Coverage to Raise a Sunken Boat','Payout Based on an "Agreed" Value','Coverage If You Damage a Dock','Coverage That Follows a Rented Boat'] }
-  ]},
-  { title: "Money & Numbers", groups: [
-    { color:'yellow', name:'Types of Deductibles', items:['A Flat Dollar Amount','A Percentage of Value','One That Shrinks Over Time','One Per Incident'] },
-    { color:'green', name:'What Affects Your Premium', items:['Your Credit-Based Score','Your Driving Record','Your Home\u2019s Age','Your Claims History'] },
-    { color:'blue', name:'Ways an Insurer Values a Total Loss', items:['Value Minus Depreciation','The Cost to Rebuild New','A Value You Agreed to Upfront','A Value Stated on the Policy'] },
-    { color:'purple', name:'Insurance Words People Get Backwards', items:['Premium Is What YOU Pay','Deductible Is Paid First by YOU','Claim Is a Request','Policy Is the Contract'] }
-  ]},
-  { title: "Claims 101", groups: [
-    { color:'yellow', name:'People Involved in a Claim', items:['You (The Policyholder)','The Adjuster','The Beneficiary','The Other Driver'] },
-    { color:'green', name:'What You\u2019ll Need to File a Claim', items:['A Police Report','Photos of the Damage','A Repair Estimate','Proof of Ownership'] },
-    { color:'blue', name:'What Happens After You File', items:['An Adjuster Inspects It','The Insurer Decides Coverage','You Get an Offer','You Get Paid Minus Your Deductible'] },
-    { color:'purple', name:'Claims Words That Confuse People', items:['Total Loss','Actual Cash Value','Denied Isn\u2019t Always Final','Subrogation'] }
-  ]},
-  { title: "On the Job", groups: [
-    { color:'yellow', name:'Business Insurance Basics', items:['General Liability','Commercial Property','Workers\u2019 Comp','Commercial Auto'] },
-    { color:'green', name:'Who Might Sue a Business', items:['A Customer','An Employee','A Vendor','A Competitor'] },
-    { color:'blue', name:'What Workers\u2019 Comp Actually Pays', items:['Medical Bills','Lost Wages','Job Retraining','A Death Benefit'] },
-    { color:'purple', name:'___ Liability', items:['Product','Professional','Cyber','Employment'] }
-  ]},
-  { title: "Contractors & Construction", groups: [
-    { color:'yellow', name:'Who Might Carry a Contractor\u2019s Policy', items:['General Contractor','Subcontractor','Electrician','Roofer'] },
-    { color:'green', name:'What a Contractor Needs Besides General Liability', items:['Workers\u2019 Comp','Commercial Auto','Tools & Equipment Coverage','Builders Risk'] },
-    { color:'blue', name:'Reasons to Ask for Proof of Insurance', items:['An Uninsured Sub Gets Hurt','A Neighbor\u2019s Yard Gets Damaged','The Work Fails Inspection','The Contractor Vanishes'] },
-    { color:'purple', name:'What a "Bond" Actually Guarantees', items:['They\u2019ll Take the Job at All','The Work Gets Finished','Their Suppliers Get Paid','They\u2019ll Fix Problems Later'] }
-  ]},
-  { title: "Retail & Storefront Risk", groups: [
-    { color:'yellow', name:'Common Retail Store Claims', items:['Customer Slip & Fall','Shoplifting Loss','A Broken Storefront Window','Employee Injury'] },
-    { color:'green', name:'Coverages a Shop Owner Needs', items:['General Liability','Commercial Property','A Business Owners Policy','Workers\u2019 Comp'] },
-    { color:'blue', name:'What a Business Owners Policy Bundles', items:['Building Coverage','Equipment & Inventory Coverage','Lost Income Coverage','Employee Theft Coverage'] },
-    { color:'purple', name:'Odd Things a Retail Policy Excludes', items:['Cash Left in the Register','Theft by Your Own Employee','A Product That Hurts Someone','A Hacked Checkout System'] }
-  ]},
-  { title: "Utah Life", groups: [
-    { color:'yellow', name:'Weather Utah Homeowners Deal With', items:['Hailstorm','Wildfire','Windstorm','Ice Dam'] },
-    { color:'green', name:'Why You Might Need Farm & Ranch Coverage', items:['Livestock','A Barn','Irrigation Equipment','Hired Hands'] },
-    { color:'blue', name:'Reasons Utah Drivers File Claims', items:['Deer Strike','Black Ice','A Canyon Rockslide','Distracted Driving'] },
-    { color:'purple', name:'Utah Insurance Facts Most People Don\u2019t Know', items:['Extra "PIP" Coverage Required','Higher Minimum Coverage Numbers','A "Modified No-Fault" State','A "Big I" Best Practices Agency'] }
+  { title: "Insurance Ads You've Definitely Heard", groups: [
+    { color:'yellow', name:'Ways Companies Advertise Savings', items:['Bundle and Save','Switch and Save','A Free Quote','No Deposit'] },
+    { color:'green', name:'Discounts People Actually Get', items:['Good Driver Discount','Good Student Discount','Multi-Car Discount','Homeowner Discount'] },
+    { color:'blue', name:'Perks Some Companies Offer', items:['Accident Forgiveness','24/7 Claims Service','A Mobile App','Roadside Assistance'] },
+    { color:'purple', name:'What These Phrases Actually Mean', items:['"Full Coverage" Isn\u2019t One Specific Thing','"Total Loss" Doesn\u2019t Mean Worthless','"Actual Cash Value" Isn\u2019t What You Paid','"Pre-Existing" Means Before You Signed Up'] }
   ]}
 ];
 
