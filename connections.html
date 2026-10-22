@@ -35,15 +35,27 @@
     --c-purple-bg: #dbc3ec; --c-purple-text: #4a2a63;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; }
-  body {
-    margin: 0;
+  /* Deliberately not styling html/body beyond a margin reset: this file gets
+     embedded by stripping the outer <html>/<body> tags and splicing our
+     content into someone else's page, where those tags become THEIR real
+     <body> — any layout rule here (flex, min-height, etc.) would hijack
+     their whole page. Everything layout-related lives on .breakout/.wrap
+     instead, which can never collide with anything outside this widget. */
+  body { margin: 0; }
+  /* Forces the card to center against the real browser viewport instead of
+     whatever (possibly narrow, possibly off-center) box an embedding page's
+     own layout happens to give this widget. */
+  .breakout {
+    position: relative;
+    left: 50%;
+    right: 50%;
+    width: 100vw;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    min-height: 100vh;
     font-family: var(--font-body);
     background: var(--bg);
     color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
     overflow-x: hidden;
   }
   .wrap {
@@ -223,6 +235,7 @@
 </style>
 </head>
 <body>
+<div class="breakout">
 <div class="wrap">
   <header>
     <button class="icon-btn" id="helpBtn" aria-label="How to play">?</button>
@@ -274,6 +287,7 @@
     The Insurance Center · (801) 622-2626 Farr West, UT · (435) 654-0353 Heber City, UT<br>
     New puzzle every day. Built for fun — some categories simplify real coverage rules for gameplay.
   </footer>
+</div>
 </div>
 
 <div class="modal-overlay" id="helpOverlay">
