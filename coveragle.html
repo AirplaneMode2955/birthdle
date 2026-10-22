@@ -38,19 +38,14 @@
      embedded by stripping the outer <html>/<body> tags and splicing our
      content into someone else's page, where those tags become THEIR real
      <body> — any layout rule here (flex, min-height, etc.) would hijack
-     their whole page. Everything layout-related lives on .breakout/.wrap
+     their whole page. Everything layout-related lives on .theme-bg/.wrap
      instead, which can never collide with anything outside this widget. */
   body { margin: 0; }
-  /* Forces the card to center against the real browser viewport instead of
-     whatever (possibly narrow, possibly off-center) box an embedding page's
-     own layout happens to give this widget. */
-  .breakout {
-    position: relative;
-    left: 50%;
-    right: 50%;
-    width: 100vw;
-    margin-left: -50vw;
-    margin-right: -50vw;
+  /* Scoped background/theme wrapper — not html/body — so it can never leak
+     into an embedding page. No viewport-breakout trick here: that depends
+     on the embedding page not clipping overflow, which we can't verify,
+     so .wrap just centers within whatever width this ends up with. */
+  .theme-bg {
     min-height: 100vh;
     font-family: var(--font-body);
     background: var(--bg);
@@ -291,7 +286,7 @@
 </style>
 </head>
 <body>
-<div class="breakout">
+<div class="theme-bg">
 <div class="wrap">
   <header>
     <button class="icon-btn" id="helpBtn" aria-label="How to play">?</button>
